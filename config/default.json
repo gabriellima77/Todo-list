@@ -1,0 +1,11 @@
+{
+  "mysql": {
+    "database": "todoList",
+    "user": "root",
+    "password": "password",
+    "host": "localhost"
+  },
+  "api": {
+    "port": 4000
+  }
+}
