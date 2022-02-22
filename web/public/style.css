@@ -1,0 +1,50 @@
+:root {
+  --green: #00ff85;
+  --purple: #4541ff;
+  --dark-gray: #353535;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100vh;
+}
+
+header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+h1 {
+  margin-left: 1rem;
+  letter-spacing: 0.5rem;
+  color: var(--purple);
+}
+
+.logo span {
+  color: var(--green);
+}
+
+main {
+  width: 100%;
+  padding: 50px 10px;
+}
+
+.todo {
+
+}
