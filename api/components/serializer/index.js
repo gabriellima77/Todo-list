@@ -27,6 +27,7 @@ class Serializer {
     this.publicKeys.forEach((key) => {
       filteredData[key] = object[key];
     });
+    console.log(filteredData);
     return filteredData;
   }
 
@@ -42,7 +43,7 @@ class SerializerTasks extends Serializer {
   constructor(contentType) {
     super();
     this.contentType = contentType;
-    this.publicKeys = ['id', 'text'];
+    this.publicKeys = ['id', 'text', 'project'];
     this.tagPlural = 'Tasks';
     this.tagSingular = 'Task';
   }

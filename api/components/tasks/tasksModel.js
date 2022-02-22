@@ -6,6 +6,10 @@ const column = {
     type: Sequelize.TEXT,
     allowNull: false,
   },
+  project: {
+    type: Sequelize.TEXT,
+    allowNull: false,
+  },
 };
 
 const options = {

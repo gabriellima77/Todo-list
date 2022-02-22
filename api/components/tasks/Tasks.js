@@ -3,9 +3,10 @@ const ValueIsNotValid = require('../error/ValueIsNotValid');
 const repository = require('./repository');
 
 class Tasks {
-  constructor({ id, text }) {
+  constructor({ id, text, project }) {
     this.text = text;
     this.id = id;
+    this.project = project;
   }
 
   list() {
@@ -15,28 +16,40 @@ class Tasks {
   async load() {
     const task = await repository.load(this.id);
     if (!task) throw new NotFound();
-    const { text, dataCriacao, dataAtualizacao } = task;
+    const { text, dataCriacao, dataAtualizacao, project } = task;
     this.text = text;
     this.dataCriacao = dataCriacao;
     this.dataAtualizacao = dataAtualizacao;
+    this.project = project;
   }
 
   async create() {
     const newTask = {};
-    const key = 'text';
-    const value = this[key];
-    const isValidValue = typeof value === 'string' && value;
-    if (!isValidValue) throw new ValueIsNotValid();
-    newTask[key] = value;
+    const keys = ['text', 'project'];
+    keys.forEach((key) => {
+      const value = this[key];
+      const isValidValue = typeof value === 'string' && value;
+      if (!isValidValue) throw new ValueIsNotValid();
+      newTask[key] = value;
+    });
     return repository.create(newTask);
   }
 
   async update(changes) {
     this.load();
-    const key = 'text';
-    const hasProperty = changes.hasOwnProperty(key);
-    if (!hasProperty) throw new ValueIsNotValid();
-    return repository.update(this.id, { text: changes[key] });
+    const data = {};
+    const keys = ['text', 'project'];
+    keys.forEach((key) => {
+      const hasProperty = changes.hasOwnProperty(key);
+      if (!hasProperty) throw new ValueIsNotValid();
+      const value = this[key];
+      const isValidValue = typeof value === 'string' && value;
+      if (!isValidValue) throw new ValueIsNotValid();
+      newTask[key] = value;
+      data[key] = value;
+    });
+
+    return repository.update(this.id, data);
   }
 
   async delete() {
