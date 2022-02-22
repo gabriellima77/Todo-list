@@ -1,10 +1,24 @@
+const jsontoxml = require('jsontoxml');
+
 class Serializer {
   #json(data) {
     return JSON.stringify(data);
   }
 
+  #setXmlTag(data) {
+    return { [this.tagSingular]: data };
+  }
+
+  #xml(data) {
+    if (Array.isArray(data))
+      data = { [this.tagPlural]: data.map((datum) => this.#setXmlTag(datum)) };
+    else data = this.#setXmlTag(data);
+    return jsontoxml(data);
+  }
+
   serialize(data) {
     data = this.filter(data);
+    if (this.contentType === 'application/xml') return this.#xml(data);
     return this.#json(data);
   }
 
@@ -48,5 +62,5 @@ module.exports = {
   Serializer,
   SerializerTasks,
   SerializerError,
-  acceptedTypes: ['application/json'],
+  acceptedTypes: ['application/json', 'application/xml'],
 };
