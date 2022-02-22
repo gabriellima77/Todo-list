@@ -1,3 +1,5 @@
+const NotFound = require('../error/NotFound');
+const ValueIsNotValid = require('../error/ValueIsNotValid');
 const repository = require('./repository');
 
 class Tasks {
@@ -12,7 +14,7 @@ class Tasks {
 
   async load() {
     const task = await repository.load(this.id);
-    if (!task) throw new Error("Task doesn't exist!");
+    if (!task) throw new NotFound();
     const { text, dataCriacao, dataAtualizacao } = task;
     this.text = text;
     this.dataCriacao = dataCriacao;
@@ -24,7 +26,7 @@ class Tasks {
     const key = 'text';
     const value = this[key];
     const isValidValue = typeof value === 'string' && value;
-    if (!isValidValue) throw new Error('Value is not valid!');
+    if (!isValidValue) throw new ValueIsNotValid();
     newTask[key] = value;
     return repository.create(newTask);
   }
@@ -33,7 +35,7 @@ class Tasks {
     this.load();
     const key = 'text';
     const hasProperty = changes.hasOwnProperty(key);
-    if (!hasProperty) throw new Error('Value is not valid!');
+    if (!hasProperty) throw new ValueIsNotValid();
     return repository.update(this.id, { text: changes[key] });
   }
 

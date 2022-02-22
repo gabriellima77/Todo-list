@@ -11,18 +11,18 @@ router.get('/', async (_, res) => {
   res.send(JSON.stringify(data));
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, handleError) => {
   try {
     const task = req.body;
     const tasks = new Tasks(task);
     await tasks.create();
     res.status(201).end();
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    handleError(error);
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, handleError) => {
   try {
     const { id } = req.params;
     const tasks = new Tasks({ id });
@@ -30,22 +30,22 @@ router.get('/:id', async (req, res) => {
     const serializer = new Serializer();
     res.send(serializer.serialize(tasks));
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    handleError(error);
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, handleError) => {
   try {
     const { id } = req.params;
     const tasks = new Tasks({ id });
     await tasks.delete();
     res.end();
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    handleError(error);
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, handleError) => {
   try {
     const { id } = req.params;
     const content = req.body;
@@ -53,7 +53,7 @@ router.put('/:id', async (req, res) => {
     await tasks.update(content);
     res.end();
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    handleError(error);
   }
 });
 
