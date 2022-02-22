@@ -1,7 +1,11 @@
 class Serializer {
+  #json(data) {
+    return JSON.stringify(data);
+  }
+
   serialize(data) {
     data = this.filter(data);
-    return data;
+    return this.#json(data);
   }
 
   filterObject(object) {

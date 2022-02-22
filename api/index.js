@@ -23,7 +23,7 @@ module.exports = () => {
   });
 
   app.use('/api/tasks', router);
-  app.use((error, req, res, next) => {
+  app.use((error, _, res, next) => {
     const contentType = res.getHeader('Content-Type');
     let status = 500;
     if (error instanceof NotFound) status = 404;

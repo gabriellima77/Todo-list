@@ -7,8 +7,7 @@ router.get('/', async (_, res) => {
   const contentType = res.getHeader('Content-Type');
   let data = await repository.list();
   const serializer = new Serializer(contentType);
-  data = serializer.serialize(data);
-  res.send(JSON.stringify(data));
+  res.send(serializer.serialize(data));
 });
 
 router.post('/', async (req, res, handleError) => {
