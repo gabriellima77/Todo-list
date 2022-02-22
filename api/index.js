@@ -1,7 +1,7 @@
 const express = require('express');
 const router = require('./components/tasks');
 const createTable = require('./components/tasks/createTable');
-const acceptedTypes = require('./components/Serializer').acceptedTypes;
+const acceptedTypes = require('./components/serializer').acceptedTypes;
 const config = require('config');
 const app = express();
 
@@ -20,6 +20,9 @@ module.exports = () => {
   });
 
   app.use('/api/tasks', router);
+  app.use((error, req, res, next)=> {
+
+  })
 
   createTable()
     .then(() => {

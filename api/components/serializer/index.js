@@ -30,8 +30,19 @@ class SerializerTasks extends Serializer {
   }
 }
 
+class SerializerError extends Serializer {
+  constructor(contentType) {
+    super();
+    this.contentType = contentType;
+    this.publicKeys = ['message', 'id'];
+    this.tagPlural = 'Errors';
+    this.tagSingular = 'Error';
+  }
+}
+
 module.exports = {
   Serializer,
   SerializerTasks,
+  SerializerError,
   acceptedTypes: ['application/json'],
 };
