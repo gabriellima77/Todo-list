@@ -12,6 +12,10 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
     <link rel="stylesheet" href="style.css" />
     <title>Todo List</title>
   </head>
@@ -24,14 +28,52 @@
     </header>
     <main>
       <section class="todo">
-        <h2></h2>
+        <div class="header">
+          <div class="box">
+            <h2>Home</h2>
+            <span class="quantity"></span>
+          </div>
+          <button class="show-more">
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+        </div>
+        <div class="task">
+          <input type="checkbox" class="task-check" />
+          <p class="text">Testando</p>
+          <div class="buttons">
+            <button class="remove"><i class="fa-solid fa-trash"></i></button>
+            <button class="edit"><i class="fa-solid fa-pen"></i></button>
+          </div>
+        </div>
+        <button class="add">
+          <i class="fa-solid fa-circle-plus"></i> <span>Add Task</span>
+        </button>
       </section>
       <section class="todo">
-        <h2></h2>
+        <div class="header">
+          <div class="box">
+            <h2>Today</h2>
+            <span class="quantity"></span>
+          </div>
+          <button class="show-more">
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+        </div>
       </section>
       <section class="todo">
-        <h2></h2>
+        <div class="header">
+          <div class="box">
+            <h2>Week</h2>
+            <span class="quantity"></span>
+          </div>
+          <button class="show-more">
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+        </div>
       </section>
+      <button class="add add-project">
+        <i class="fa-solid fa-circle-plus"></i> <span>Add Project</span>
+      </button>
     </main>
     <script src="index.js"></script>
   </body>
