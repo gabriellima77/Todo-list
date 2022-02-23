@@ -12,10 +12,12 @@ router.get('/', async (_, res) => {
 
 router.post('/', async (req, res, handleError) => {
   try {
+    const contentType = res.getHeader('Content-Type');
     const task = req.body;
     const tasks = new Tasks(task);
     await tasks.create();
-    res.status(201).end();
+    const serializer = new Serializer(contentType);
+    res.status(201).send(serializer.serialize(tasks));
   } catch (error) {
     handleError(error);
   }

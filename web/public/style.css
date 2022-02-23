@@ -133,6 +133,10 @@ main {
   transform: rotate(-45deg);
 }
 
+.task-check:checked + .text {
+  text-decoration: line-through;
+}
+
 .text {
   color: rgba(0, 0, 0, 0.75);
   font-size: 0.8rem;
@@ -180,4 +184,28 @@ main {
 
 .add-project span {
   font-size: 1.2rem;
+}
+
+.todo form {
+  display: flex;
+  margin-top: 20px;
+  width: 50%;
+}
+
+.addtask-input {
+  padding: 0 10px;
+  width: 100%;
+  height: 25px;
+  border: none;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.addtask-btn {
+  border: none;
+  background-color: var(--green);
+  color: var(--dark-gray);
+  font-weight: bold;
+  padding: 0 15px;
+  border-radius: 0px 4px 4px 0px;
+  cursor: pointer;
 }

@@ -6,10 +6,12 @@ const config = require('config');
 const { SerializerError } = require('./components/serializer');
 const NotFound = require('./components/error/NotFound');
 const ValueIsNotValid = require('./components/error/ValueIsNotValid');
+const cors = require('cors');
 const app = express();
 
 module.exports = () => {
   app.use(express.json());
+  app.use(cors());
   app.use((req, res, next) => {
     let contentType = req.header('Accept');
     if (contentType === '*/*') contentType = 'application/json';

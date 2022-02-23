@@ -32,7 +32,8 @@ class Tasks {
       if (!isValidValue) throw new ValueIsNotValid();
       newTask[key] = value;
     });
-    return repository.create(newTask);
+    const { id } = await repository.create(newTask);
+    this.id = id;
   }
 
   async update(changes) {
