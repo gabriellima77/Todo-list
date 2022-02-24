@@ -12,6 +12,18 @@ const addTaskToBd = async (task) => {
   return content;
 };
 
+const removeTask = async (id) => {
+  return await fetch(`http://localhost:4000/api/tasks/${id}`, {
+    method: 'DELETE',
+    mode: 'cors',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ id }),
+  });
+};
+
 const createInput = (project) => {
   const form = document.createElement('form');
   const input = document.createElement('input');
@@ -43,13 +55,12 @@ const addTaskEvent = (section) => {
   section.insertBefore(input, after);
 };
 
-const putAddTask = () => {
-  const section = document.querySelector('.todo');
-  const btn = section.querySelector('.add');
+const putAddTask = (btn) => {
   btn.addEventListener('click', () => {
-    const hasInput = section.querySelector('form');
+    const hasInput = btn.parentElement.querySelector('form');
+    const parent = btn.parentElement;
     if (hasInput) return;
-    addTaskEvent(section);
+    addTaskEvent(parent);
   });
 };
 
@@ -71,6 +82,12 @@ const createTask = ({ id, text, isChecked }) => {
     const icon = document.createElement('i');
     icon.classList = classList;
     button.classList.add(key);
+    if (key === 'remove') {
+      button.addEventListener('click', async () => {
+        await removeTask(id);
+        task.parentElement.removeChild(task);
+      });
+    }
     button.appendChild(icon);
     buttons.appendChild(button);
   }
@@ -88,12 +105,14 @@ const createTask = ({ id, text, isChecked }) => {
 };
 
 const putTasks = (tasks, selector) => {
+  tasks = tasks.reverse();
   const section = document.querySelector(selector);
-  const after = section.querySelector('.add');
+  const add = section.querySelector('.add');
+  const after = add.nextSibling;
   tasks.forEach((task) => {
     const taskElement = createTask(task);
     section.insertBefore(taskElement, after);
   });
 };
 
-export default { putTasks, putAddTask };
+export default { putTasks, putAddTask, createInput };

@@ -49,8 +49,14 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  height: 100px;
+  overflow: hidden;
   margin-bottom: 40px;
+  transition: all 0.3s;
+}
+
+.todo.open {
+  height: auto;
 }
 
 .header {
@@ -178,7 +184,7 @@ main {
 }
 
 .add-project {
-  margin: 50px auto 0;
+  margin: 80px auto 0;
   font-size: 1.8rem;
 }
 
@@ -186,8 +192,10 @@ main {
   font-size: 1.2rem;
 }
 
-.todo form {
+.todo form,
+main form {
   display: flex;
+  margin: 0 auto;
   margin-top: 20px;
   width: 50%;
 }
