@@ -1,3 +1,4 @@
+import putAllProjects from './components/projects/index.js';
 import Tasks from './components/task/index.js';
 
 const tasks = [
@@ -5,9 +6,9 @@ const tasks = [
   { id: 2, text: 'Testando 2', isChecked: true },
 ];
 
-const start = () => {
-  Tasks.putAddTask();
-  Tasks.putTasks(tasks, '.home');
+const start = async () => {
+  await Tasks.putAddTask();
+  await putAllProjects();
 };
 
 start();

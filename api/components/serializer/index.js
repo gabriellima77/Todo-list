@@ -27,7 +27,6 @@ class Serializer {
     this.publicKeys.forEach((key) => {
       filteredData[key] = object[key];
     });
-    console.log(filteredData);
     return filteredData;
   }
 

@@ -1,6 +1,7 @@
 const addTaskToBd = async (task) => {
   const response = await fetch('http://localhost:4000/api/tasks', {
     method: 'POST',
+    mode: 'cors',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
