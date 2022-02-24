@@ -24,6 +24,54 @@ const removeTask = async (id) => {
   });
 };
 
+const editTask = async (task) => {
+  const { id, text, project } = task;
+  return await fetch(`http://localhost:4000/api/tasks/${id}`, {
+    method: 'PUT',
+    mode: 'cors',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ text, project }),
+  });
+};
+
+const editEvent = (text, id) => {
+  const value = text.textContent;
+  const parent = text?.parentElement;
+
+  if (!parent) return;
+
+  const project = parent.parentElement
+    .querySelector('h2')
+    .textContent.toLowerCase();
+  const after = parent.querySelector('.buttons');
+  const input = document.createElement('input');
+  const form = document.createElement('form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = input.value;
+    await editTask({ text, id, project });
+    const p = document.createElement('p');
+    p.classList.add('text');
+    p.textContent = text;
+    parent.removeChild(form);
+    parent.insertBefore(p, after);
+  });
+
+  const pattern = '[^"\'`]+';
+  const title = 'No mínimo 1 caracter';
+  input.pattern = pattern;
+  input.title = title;
+  input.value = value;
+  input.required = true;
+  input.classList.add('edit-input');
+  form.appendChild(input);
+  parent.removeChild(text);
+  parent.insertBefore(form, after);
+};
+
 const createInput = (project) => {
   const form = document.createElement('form');
   const input = document.createElement('input');
@@ -86,6 +134,11 @@ const createTask = ({ id, text, isChecked }) => {
       button.addEventListener('click', async () => {
         await removeTask(id);
         task.parentElement.removeChild(task);
+      });
+    } else {
+      button.addEventListener('click', () => {
+        const text = task.querySelector('p');
+        editEvent(text, id);
       });
     }
     button.appendChild(icon);

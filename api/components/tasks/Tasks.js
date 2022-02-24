@@ -37,19 +37,17 @@ class Tasks {
   }
 
   async update(changes) {
-    this.load();
+    await this.load();
     const data = {};
     const keys = ['text', 'project'];
     keys.forEach((key) => {
       const hasProperty = changes.hasOwnProperty(key);
       if (!hasProperty) throw new ValueIsNotValid();
-      const value = this[key];
+      const value = changes[key];
       const isValidValue = typeof value === 'string' && value;
       if (!isValidValue) throw new ValueIsNotValid();
-      newTask[key] = value;
       data[key] = value;
     });
-
     return repository.update(this.id, data);
   }
 

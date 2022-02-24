@@ -126,7 +126,8 @@ const putAllProjects = async () => {
     const selector = '.' + className;
     const section = document.querySelector(selector);
     const quantity = section.querySelector('.quantity');
-    quantity.textContent = projects[className]?.length;
+    const project = projects[className];
+    quantity.textContent = project ? project.length : 0;
     addShowMoreEvent(selector);
   });
 
