@@ -42,9 +42,19 @@ class SerializerTasks extends Serializer {
   constructor(contentType) {
     super();
     this.contentType = contentType;
-    this.publicKeys = ['id', 'text', 'project'];
+    this.publicKeys = ['id', 'text'];
     this.tagPlural = 'Tasks';
     this.tagSingular = 'Task';
+  }
+}
+
+class SerializerProjects extends Serializer {
+  constructor(contentType) {
+    super();
+    this.contentType = contentType;
+    this.publicKeys = ['id', 'name'];
+    this.tagPlural = 'Projects';
+    this.tagSingular = 'Project';
   }
 }
 
@@ -61,6 +71,7 @@ class SerializerError extends Serializer {
 module.exports = {
   Serializer,
   SerializerTasks,
+  SerializerProjects,
   SerializerError,
   acceptedTypes: ['application/json', 'application/xml'],
 };

@@ -1,6 +1,6 @@
 class ValueIsNotValid extends Error {
-  constructor() {
-    super('Value is not valid!');
+  constructor(value = 'Value') {
+    super(`${value} is not valid!`);
     this.name = 'ValueIsNotValid';
     this.id = 1;
   }

@@ -5,7 +5,7 @@ module.exports = {
     return model.findAll();
   },
   create(task) {
-    return model.create(task);
+    return model.create(task, { raw: true });
   },
   load(id) {
     return model.findOne({ where: { id } });

@@ -9,7 +9,7 @@ class Tasks {
     this.project = project;
   }
 
-  list() {
+  async list() {
     return repository.list();
   }
 
@@ -29,7 +29,7 @@ class Tasks {
     keys.forEach((key) => {
       const value = this[key];
       const isValidValue = typeof value === 'string' && value;
-      if (!isValidValue) throw new ValueIsNotValid();
+      if (!isValidValue) throw new ValueIsNotValid(key);
       newTask[key] = value;
     });
     const { id } = await repository.create(newTask);

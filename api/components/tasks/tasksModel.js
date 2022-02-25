@@ -1,15 +1,19 @@
 const Sequelize = require('sequelize');
 const instance = require('../database');
 
-const column = {
+const columns = {
   text: {
     type: Sequelize.TEXT,
     allowNull: false,
   },
   project: {
-    type: Sequelize.TEXT,
+    type: Sequelize.INTEGER,
     allowNull: false,
-  },
+    references: {
+      model: require('../projects/projectsModel'),
+      key: 'id',
+    },
+  }
 };
 
 const options = {
@@ -20,4 +24,4 @@ const options = {
   updatedAt: 'dataAtualizacao',
 };
 
-module.exports = instance.define('task', column, options);
+module.exports = instance.define('task', columns, options);

@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const Tasks = require('./Tasks');
-const repository = require('./repository');
 const Serializer = require('../serializer').SerializerTasks;
 
 router.get('/', async (_, res) => {
   const contentType = res.getHeader('Content-Type');
-  let data = await repository.list();
+  const tasks = new Tasks({});
+  const data = await tasks.list();
   const serializer = new Serializer(contentType);
   res.send(serializer.serialize(data));
 });
