@@ -10,11 +10,11 @@ class Tasks {
   }
 
   async list() {
-    return repository.list();
+    return repository.list(this.project);
   }
 
   async load() {
-    const task = await repository.load(this.id);
+    const task = await repository.load(this.id, this.project);
     if (!task) throw new NotFound();
     const { text, dataCriacao, dataAtualizacao, project } = task;
     this.text = text;
@@ -48,12 +48,12 @@ class Tasks {
       if (!isValidValue) throw new ValueIsNotValid();
       data[key] = value;
     });
-    return repository.update(this.id, data);
+    return repository.update(this.id, this.project, data);
   }
 
   async delete() {
     await this.load();
-    return repository.delete(this.id);
+    return repository.delete(this.id, this.project);
   }
 }
 

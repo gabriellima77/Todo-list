@@ -1,19 +1,19 @@
 const model = require('./tasksModel');
 
 module.exports = {
-  list() {
-    return model.findAll();
+  list(project) {
+    return model.findAll({ where: { project } });
   },
   create(task) {
     return model.create(task, { raw: true });
   },
-  load(id) {
-    return model.findOne({ where: { id } });
+  load(id, project) {
+    return model.findOne({ where: { id, project } });
   },
-  update(id, changes) {
-    return model.update(changes, { where: { id } });
+  update(id, project, changes) {
+    return model.update(changes, { where: { id, project } });
   },
-  delete(id) {
-    return model.destroy({ where: { id } });
+  delete(id, project) {
+    return model.destroy({ where: { id, project } });
   },
 };

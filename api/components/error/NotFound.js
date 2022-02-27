@@ -1,6 +1,6 @@
 class NotFound extends Error {
-  constructor() {
-    super("Task doesn't exist!");
+  constructor(type = 'Task') {
+    super(`${type} doesn't exist!`);
     this.name = 'NotFound';
     this.id = 0;
   }
