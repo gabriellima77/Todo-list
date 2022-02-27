@@ -1,30 +1,41 @@
 import Tasks from '../task/index.js';
 const initialProjects = ['home', 'today', 'week'];
 
-const getAllTasks = async () => {
-  const response = await fetch('http://localhost:4000/api/tasks', {
-    mode: 'cors',
-  });
+async function getProjectTasks(id) {
+  const response = await fetch(
+    `http://localhost:4000/api/projects/${id}/tasks`,
+    {
+      mode: 'cors',
+    }
+  );
   const tasks = await response.json();
   return tasks;
-};
+}
 
-const filterProjects = async () => {
-  const tasks = await getAllTasks();
-  let projects = tasks.reduce((projects, task) => {
-    const { project } = task;
-    const hasProject = projects[project];
-    if (hasProject) projects[project].push(task);
-    else projects[project] = [task];
-    return projects;
-  }, {});
+async function getProjects() {
+  const response = await fetch(`http://localhost:4000/api/projects`, {
+    mode: 'cors',
+  });
+  const projects = await response.json();
   return projects;
-};
+}
 
-const createProject = (project, quant = 0) => {
+async function createProject(project) {
+  const response = await fetch(`http://localhost:4000/api/projects`, {
+    mode: 'cors',
+    method: 'POST',
+    body: JSON.stringify(project),
+    headers: { 'Content-Type': 'application/json' },
+  });
+  const data = await response.json();
+  return data;
+}
+
+const createProjectElement = (project, quant = 0) => {
+  const { id, name } = project;
   const iconsClass = ['fa-solid fa-caret-down', 'fa-solid fa-circle-plus'];
   const section = document.createElement('section');
-  const Title = project[0].toUpperCase() + project.substring(1);
+  const Title = name[0].toUpperCase() + name.substring(1);
   const header = document.createElement('div');
   const box = document.createElement('div');
   const h2 = document.createElement('h2');
@@ -33,7 +44,11 @@ const createProject = (project, quant = 0) => {
   const add = document.createElement('button');
   const addText = document.createElement('span');
 
-  section.classList.add('todo', project);
+  section.setAttribute('data-id', id);
+
+  const classSection = name.replaceAll(' ', '_');
+
+  section.classList.add('todo', classSection);
   header.classList.add('header');
   box.classList.add('box');
   quantity.classList.add('quantity');
@@ -74,8 +89,9 @@ const createInput = () => {
     e.preventDefault();
     const text = input.value;
     const after = document.querySelector('.add-project');
-    const project = createProject(text);
-    after.parentElement.insertBefore(project, after);
+    const project = await createProject({ name: text });
+    const projectElement = createProjectElement(project);
+    after.parentElement.insertBefore(projectElement, after);
     form.parentElement.removeChild(form);
   });
   form.append(input, button);
@@ -98,38 +114,39 @@ const addProjectEvent = () => {
 
 const addShowMoreEvent = (selector) => {
   const section = document.querySelector(selector);
+  const header = section.querySelector('.header');
   const showMore = section.querySelector('.show-more');
-  showMore.addEventListener('click', () => {
+  header.addEventListener('click', () => {
     section.classList.toggle('open');
     showMore.classList.toggle('open');
   });
 };
 
 const putAllProjects = async () => {
-  const projects = await filterProjects();
   const after = document.querySelector('.add-project');
-  const parent = after.parentElement;
-  for (let key in projects) {
-    const selector = '.' + key;
-    const isAInitialProject = initialProjects.includes(key);
-    if (!isAInitialProject) {
-      const quantity = projects[key].length;
-      const project = createProject(key, quantity);
-      parent.insertBefore(project, after);
-      addShowMoreEvent(selector);
-    }
-    const tasks = projects[key];
-    Tasks.putTasks(tasks, selector);
-  }
 
-  initialProjects.forEach((className) => {
-    const selector = '.' + className;
-    const section = document.querySelector(selector);
-    const quantity = section.querySelector('.quantity');
-    const project = projects[className];
-    quantity.textContent = project ? project.length : 0;
+  const projects = await getProjects();
+  for (let i = 0; i < projects.length; i++) {
+    const project = projects[i];
+    const selector = '.' + project.name.replaceAll(' ', '_');
+    const { id } = project;
+    const projectTasks = await getProjectTasks(id);
+    const quantity = projectTasks.length;
+    const isAInitialProject = initialProjects.includes(project.name);
+    if (!isAInitialProject) {
+      const parent = after.parentElement;
+      const projectElement = createProjectElement(project, quantity);
+      parent.insertBefore(projectElement, after);
+    } else {
+      const section = document.querySelector(selector);
+      const quantityElement = section.querySelector('.quantity');
+      quantityElement.textContent = quantity;
+      section.setAttribute('data-id', id);
+    }
+    console.log(selector);
     addShowMoreEvent(selector);
-  });
+    Tasks.putTasks(projectTasks, selector);
+  }
 
   addProjectEvent();
 };

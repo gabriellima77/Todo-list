@@ -25,13 +25,14 @@ class Tasks {
 
   async create() {
     const newTask = {};
-    const keys = ['text', 'project'];
-    keys.forEach((key) => {
-      const value = this[key];
-      const isValidValue = typeof value === 'string' && value;
-      if (!isValidValue) throw new ValueIsNotValid(key);
-      newTask[key] = value;
-    });
+    let value = this.text;
+    const isValidText = typeof value === 'string' && value;
+    if (!isValidText) throw new ValueIsNotValid('Text');
+    newTask.text = value;
+    value = this.project;
+    const isValidProject = typeof value === 'number' && value > 0;
+    if (!isValidProject) throw new ValueIsNotValid('Project');
+    newTask.project = value;
     const { id } = await repository.create(newTask);
     this.id = id;
   }
@@ -39,15 +40,9 @@ class Tasks {
   async update(changes) {
     await this.load();
     const data = {};
-    const keys = ['text', 'project'];
-    keys.forEach((key) => {
-      const hasProperty = changes.hasOwnProperty(key);
-      if (!hasProperty) throw new ValueIsNotValid();
-      const value = changes[key];
-      const isValidValue = typeof value === 'string' && value;
-      if (!isValidValue) throw new ValueIsNotValid();
-      data[key] = value;
-    });
+    const isValidText = typeof changes.text === 'string' && changes.text;
+    if (!isValidText) throw new ValueIsNotValid('Text');
+    data.text = changes.text;
     return repository.update(this.id, this.project, data);
   }
 

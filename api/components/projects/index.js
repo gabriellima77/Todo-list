@@ -3,8 +3,11 @@ const Projects = require('./Projects');
 const Serializer = require('../serializer').SerializerProjects;
 const tasksRouter = require('../tasks');
 
-
-router.use('/:idProject/tasks', tasksRouter);
+router.options('/', (_, res) => {
+  res.set('Access-Control-Allow-Methods', 'GET, POST');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(204).end();
+});
 
 router.get('/', async (_, res) => {
   const contentType = res.getHeader('Content-Type');
@@ -25,6 +28,12 @@ router.post('/', async (req, res, handleError) => {
   } catch (error) {
     handleError(error);
   }
+});
+
+router.options('/:idProject', (_, res) => {
+  res.set('Access-Control-Allow-Methods', 'GET, PUT, DELETE');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(204).end();
 });
 
 router.get('/:idProject', async (req, res, handleError) => {
@@ -64,5 +73,19 @@ router.delete('/:idProject', async (req, res, handleError) => {
     handleError(error);
   }
 });
+
+const validateProject = async (req, _, next) => {
+  try {
+    const { idProject: id } = req.params;
+    const project = new Projects({ id });
+    await project.load();
+    req.project = project;
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.use('/:idProject/tasks', validateProject, tasksRouter);
 
 module.exports = router;

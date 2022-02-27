@@ -1,40 +1,50 @@
 const addTaskToBd = async (task) => {
-  const response = await fetch('http://localhost:4000/api/tasks', {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(task),
-  });
+  const { text, project } = task;
+  const response = await fetch(
+    `http://localhost:4000/api/projects/${project}/tasks`,
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text }),
+    }
+  );
   const content = await response.json();
   return content;
 };
 
-const removeTask = async (id) => {
-  return await fetch(`http://localhost:4000/api/tasks/${id}`, {
-    method: 'DELETE',
-    mode: 'cors',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ id }),
-  });
+const removeTask = async (project, id) => {
+  return await fetch(
+    `http://localhost:4000/api/projects/${project}/tasks/${id}`,
+    {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }),
+    }
+  );
 };
 
 const editTask = async (task) => {
   const { id, text, project } = task;
-  return await fetch(`http://localhost:4000/api/tasks/${id}`, {
-    method: 'PUT',
-    mode: 'cors',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ text, project }),
-  });
+  return await fetch(
+    `http://localhost:4000/api/projects/${project}/tasks/${id}`,
+    {
+      method: 'PUT',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text }),
+    }
+  );
 };
 
 const editEvent = (text, id) => {
@@ -43,14 +53,12 @@ const editEvent = (text, id) => {
 
   if (!parent) return;
 
-  const project = parent.parentElement
-    .querySelector('h2')
-    .textContent.toLowerCase();
   const after = parent.querySelector('.buttons');
   const input = document.createElement('input');
   const form = document.createElement('form');
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const project = parent.parentElement.getAttribute('data-id');
     const text = input.value;
     await editTask({ text, id, project });
     const p = document.createElement('p');
@@ -84,11 +92,16 @@ const createInput = (project) => {
   button.textContent = 'Confirm';
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const selector = '.' + project;
+    const section = document.querySelector(selector);
+    const id = section.getAttribute('data-id');
     const text = input.value;
-    const data = { text, project };
+    const data = { text, project: id };
     const task = await addTaskToBd(data);
-    const seletor = '.' + project;
-    putTasks([task], seletor);
+    putTasks([task], selector);
+    const quantityElement = section.querySelector('.quantity');
+    const value = parseInt(quantityElement.textContent) + 1;
+    quantityElement.textContent = value;
     form.parentElement.removeChild(form);
   });
 
@@ -97,7 +110,7 @@ const createInput = (project) => {
 };
 
 const addTaskEvent = (section) => {
-  const after = section.querySelector('.add');
+  const after = section.querySelector('.add').nextSibling;
   const classList = section.classList[1];
   const input = createInput(classList);
   section.insertBefore(input, after);
@@ -132,7 +145,12 @@ const createTask = ({ id, text, isChecked }) => {
     button.classList.add(key);
     if (key === 'remove') {
       button.addEventListener('click', async () => {
-        await removeTask(id);
+        const project = task.parentElement.getAttribute('data-id');
+        await removeTask(project, id);
+        const section = task.parentElement;
+        const quantityElement = section.querySelector('.quantity');
+        const value = parseInt(quantityElement.textContent) - 1;
+        quantityElement.textContent = value;
         task.parentElement.removeChild(task);
       });
     } else {

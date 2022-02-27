@@ -7,6 +7,6 @@
   },
   "api": {
     "port": 4000,
-    "allowedPage": "localhost"
+    "allowedPage": "http://127.0.0.1:5500"
   }
 }
