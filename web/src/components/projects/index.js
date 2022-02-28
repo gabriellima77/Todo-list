@@ -31,6 +31,81 @@ async function createProject(project) {
   return data;
 }
 
+async function editProject(id, name) {
+  await fetch(`http://localhost:4000/api/projects/${id}`, {
+    mode: 'cors',
+    method: 'PUT',
+    body: JSON.stringify({ name }),
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+async function removeProject(id) {
+  const resp = await fetch(`http://localhost:4000/api/projects/${id}`, {
+    mode: 'cors',
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  console.log(resp);
+}
+
+const createBtns = (projectId) => {
+  const btns = document.createElement('div');
+  const btnsClass = { remove: 'trash', edit: 'pen' };
+  btns.classList.add('buttons', 'project');
+  for (let key in btnsClass) {
+    const classList = 'fa-solid fa-' + btnsClass[key];
+    const btn = document.createElement('button');
+    const i = document.createElement('i');
+    i.classList = classList;
+    btn.classList.add(key);
+    if (key === 'remove') {
+      btn.addEventListener('click', async () => {
+        await removeProject(projectId);
+        const projectSection = document.querySelector(
+          `[data-id="${projectId}"]`
+        );
+        projectSection.parentElement.removeChild(projectSection);
+      });
+    } else {
+      btn.addEventListener('click', () => {
+        const projectSection = document.querySelector(
+          `[data-id="${projectId}"]`
+        );
+        const hasForm = projectSection.querySelector('form');
+        if (hasForm) return;
+        const form = document.createElement('form');
+        const input = document.createElement('input');
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const after = form.nextElementSibling;
+          const formParent = form.parentElement;
+          const text = input.value;
+          await editProject(projectId, text);
+          const h2 = document.createElement('h2');
+          h2.textContent = text;
+          formParent.removeChild(form);
+          formParent.insertBefore(h2, after);
+        });
+
+        form.appendChild(input);
+
+        const text = projectSection.querySelector('h2');
+        const textParent = text.parentElement;
+        input.value = text.textContent;
+        const after = text.nextElementSibling;
+        textParent.removeChild(text);
+        textParent.insertBefore(form, after);
+      });
+    }
+
+    btn.appendChild(i);
+    btns.appendChild(btn);
+  }
+  return btns;
+};
+
 const createProjectElement = (project, quant = 0) => {
   const { id, name } = project;
   const iconsClass = ['fa-solid fa-caret-down', 'fa-solid fa-circle-plus'];
@@ -43,6 +118,7 @@ const createProjectElement = (project, quant = 0) => {
   const showMore = document.createElement('button');
   const add = document.createElement('button');
   const addText = document.createElement('span');
+  const btns = createBtns(id);
 
   section.setAttribute('data-id', id);
 
@@ -70,7 +146,7 @@ const createProjectElement = (project, quant = 0) => {
   showMore.appendChild(icons[0]);
   add.append(icons[1], addText);
   box.append(h2, quantity);
-  header.append(box, showMore);
+  header.append(box, btns, showMore);
   section.append(header, add);
   return section;
 };
@@ -93,6 +169,8 @@ const createInput = () => {
     const projectElement = createProjectElement(project);
     after.parentElement.insertBefore(projectElement, after);
     form.parentElement.removeChild(form);
+    const selector = '.' + projectElement.classList[1];
+    addShowMoreEvent(selector);
   });
   form.append(input, button);
   return form;
@@ -116,7 +194,14 @@ const addShowMoreEvent = (selector) => {
   const section = document.querySelector(selector);
   const header = section.querySelector('.header');
   const showMore = section.querySelector('.show-more');
-  header.addEventListener('click', () => {
+  header.addEventListener('click', (e) => {
+    const isGrandParentClassBtns =
+      e.target.parentElement.parentElement.classList[0] === 'buttons';
+    const isParentClassBtns = e.target.parentElement.classList[0] === 'buttons';
+    const isTargetClassBtns = e.target.classList[0] === 'buttons';
+    if (isGrandParentClassBtns || isParentClassBtns || isTargetClassBtns)
+      return;
+
     section.classList.toggle('open');
     showMore.classList.toggle('open');
   });
@@ -143,7 +228,6 @@ const putAllProjects = async () => {
       quantityElement.textContent = quantity;
       section.setAttribute('data-id', id);
     }
-    console.log(selector);
     addShowMoreEvent(selector);
     Tasks.putTasks(projectTasks, selector);
   }

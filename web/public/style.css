@@ -227,3 +227,17 @@ main form {
   padding: 0px 5px 4px;
   width: 100%;
 }
+
+.buttons.project {
+  margin-right: 20px;
+  padding-right: 20px;
+  border: 0;
+}
+
+.header form {
+  margin: 0;
+}
+
+.header input {
+  width: 100%;
+}

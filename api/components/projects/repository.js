@@ -14,6 +14,6 @@ module.exports = {
     return model.update(changes, { where: { id } });
   },
   delete(id) {
-    return model.destroy({ where: { id } });
+    return model.destroy({ where: { id }, force: true });
   },
 };

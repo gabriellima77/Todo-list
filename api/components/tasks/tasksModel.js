@@ -13,7 +13,7 @@ const columns = {
       model: require('../projects/projectsModel'),
       key: 'id',
     },
-  }
+  },
 };
 
 const options = {
