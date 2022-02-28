@@ -3,10 +3,11 @@ const ValueIsNotValid = require('../error/ValueIsNotValid');
 const repository = require('./repository');
 
 class Tasks {
-  constructor({ id, text, project }) {
+  constructor({ id, text, project, isDone }) {
     this.text = text;
     this.id = id;
     this.project = project;
+    this.isDone = isDone;
   }
 
   async list() {
@@ -16,11 +17,12 @@ class Tasks {
   async load() {
     const task = await repository.load(this.id, this.project);
     if (!task) throw new NotFound();
-    const { text, dataCriacao, dataAtualizacao, project } = task;
+    const { text, dataCriacao, dataAtualizacao, project, isDone } = task;
     this.text = text;
     this.dataCriacao = dataCriacao;
     this.dataAtualizacao = dataAtualizacao;
     this.project = project;
+    this.isDone = isDone;
   }
 
   async create() {
@@ -33,16 +35,22 @@ class Tasks {
     const isValidProject = typeof value === 'number' && value > 0;
     if (!isValidProject) throw new ValueIsNotValid('Project');
     newTask.project = value;
+    value = this.isDone;
+    if (typeof value !== 'boolean') throw new ValueIsNotValid('isDone');
+    newTask.isDone = value;
     const { id } = await repository.create(newTask);
     this.id = id;
   }
 
   async update(changes) {
     await this.load();
+    console.log(changes);
     const data = {};
     const isValidText = typeof changes.text === 'string' && changes.text;
     if (!isValidText) throw new ValueIsNotValid('Text');
     data.text = changes.text;
+    if(typeof changes.isDone !== 'boolean') throw new ValueIsNotValid('isDone');
+    data.isDone = changes.isDone;
     return repository.update(this.id, this.project, data);
   }
 

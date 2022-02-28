@@ -42,7 +42,7 @@ class SerializerTasks extends Serializer {
   constructor(contentType) {
     super();
     this.contentType = contentType;
-    this.publicKeys = ['id', 'text'];
+    this.publicKeys = ['id', 'text', 'isDone'];
     this.tagPlural = 'Tasks';
     this.tagSingular = 'Task';
   }

@@ -9,7 +9,7 @@ const addTaskToBd = async (task) => {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, isDone: false }),
     }
   );
   const content = await response.json();
@@ -32,7 +32,7 @@ const removeTask = async (project, id) => {
 };
 
 const editTask = async (task) => {
-  const { id, text, project } = task;
+  const { id, text, project, isDone } = task;
   return await fetch(
     `http://localhost:4000/api/projects/${project}/tasks/${id}`,
     {
@@ -42,7 +42,7 @@ const editTask = async (task) => {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, isDone }),
     }
   );
 };
@@ -125,7 +125,7 @@ const putAddTask = (btn) => {
   });
 };
 
-const createTask = ({ id, text, isChecked }) => {
+const createTask = ({ id, text, isDone }) => {
   const task = document.createElement('div');
   const input = document.createElement('input');
   const p = document.createElement('p');
@@ -134,7 +134,13 @@ const createTask = ({ id, text, isChecked }) => {
 
   input.type = 'checkbox';
   input.classList.add('task-check');
-  input.checked = isChecked;
+  input.checked = isDone;
+  input.addEventListener('change', async (e) => {
+    const parent = e.target.parentElement;
+    const project = parent.parentElement.getAttribute('data-id');
+    const text = parent.querySelector('.text').textContent;
+    await editTask({ id, project, text, isDone: e.target.checked });
+  });
 
   for (let key in btns) {
     let classList = 'fa-solid fa-';

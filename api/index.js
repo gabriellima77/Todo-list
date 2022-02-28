@@ -7,6 +7,7 @@ const config = require('config');
 const { SerializerError } = require('./components/serializer');
 const NotFound = require('./components/error/NotFound');
 const ValueIsNotValid = require('./components/error/ValueIsNotValid');
+const create = require('./components/database/createFirstValues');
 const app = express();
 
 module.exports = () => {
@@ -42,7 +43,9 @@ module.exports = () => {
   createTables()
     .then(() => {
       console.log('Tabelas criadas com sucesso!');
-      app.listen(config.get('api.port'), () => console.log('Server On!'));
+      create().then(() => {
+        app.listen(config.get('api.port'), () => console.log('Server On!'));
+      });
     })
     .catch(console.log);
 };

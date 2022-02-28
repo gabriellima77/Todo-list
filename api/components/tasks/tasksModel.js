@@ -6,6 +6,10 @@ const columns = {
     type: Sequelize.TEXT,
     allowNull: false,
   },
+  isDone: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+  },
   project: {
     type: Sequelize.INTEGER,
     allowNull: false,
