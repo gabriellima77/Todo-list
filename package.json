@@ -13,7 +13,6 @@
   "dependencies": {
     "@babel/runtime": "^7.17.2",
     "config": "^3.3.7",
-    "cors": "^2.8.5",
     "express": "^4.17.3",
     "jsontoxml": "^1.0.1",
     "mysql2": "^2.3.3",

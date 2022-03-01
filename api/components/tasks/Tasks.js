@@ -48,8 +48,10 @@ class Tasks {
     const isValidText = typeof changes.text === 'string' && changes.text;
     if (!isValidText) throw new ValueIsNotValid('Text');
     data.text = changes.text;
-    if(typeof changes.isDone !== 'boolean') throw new ValueIsNotValid('isDone');
-    data.isDone = changes.isDone;
+    const hasIsDone = changes.hasOwnProperty('isDone');
+    if (hasIsDone && typeof changes.isDone !== 'boolean')
+      throw new ValueIsNotValid('isDone');
+    else if (hasIsDone) data.isDone = changes.isDone;
     return repository.update(this.id, this.project, data);
   }
 
