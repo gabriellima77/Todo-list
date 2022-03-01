@@ -1,4 +1,5 @@
 const model = require('./projectsModel');
+const tasksModel = require('../tasks/tasksModel');
 
 module.exports = {
   list() {
@@ -13,7 +14,13 @@ module.exports = {
   update(id, changes) {
     return model.update(changes, { where: { id } });
   },
-  delete(id) {
+  async delete(id) {
+    const tasks = await tasksModel.findAll({
+      where: { project: id },
+      raw: true,
+    });
+    const tasksId = tasks.map((task) => task.id);
+    await tasksModel.destroy({ where: { id: tasksId } });
     return model.destroy({ where: { id }, force: true });
   },
 };

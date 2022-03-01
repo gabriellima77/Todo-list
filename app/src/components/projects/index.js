@@ -41,12 +41,11 @@ async function editProject(id, name) {
 }
 
 async function removeProject(id) {
-  const resp = await fetch(`http://localhost:4000/api/projects/${id}`, {
+  await fetch(`http://localhost:4000/api/projects/${id}`, {
     mode: 'cors',
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
   });
-  console.log(resp);
 }
 
 const createBtns = (projectId) => {

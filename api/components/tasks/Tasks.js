@@ -44,7 +44,6 @@ class Tasks {
 
   async update(changes) {
     await this.load();
-    console.log(changes);
     const data = {};
     const isValidText = typeof changes.text === 'string' && changes.text;
     if (!isValidText) throw new ValueIsNotValid('Text');

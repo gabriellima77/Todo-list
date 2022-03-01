@@ -8,6 +8,7 @@ const instance = new Sequelize(
   {
     host: config.get('mysql.host'),
     dialect: 'mysql',
+    logging: false,
   }
 );
 

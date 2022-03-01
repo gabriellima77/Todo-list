@@ -42,6 +42,7 @@ module.exports = () => {
     if (error instanceof NotFound) status = 404;
     else if (error instanceof ValueIsNotValid) status = 406;
     const serializer = new SerializerError(contentType);
+    console.log(error);
     res.status(status).send(serializer.serialize(error));
   });
 
@@ -49,7 +50,21 @@ module.exports = () => {
     .then(() => {
       console.log('Tabelas criadas com sucesso!');
       create().then(() => {
-        app.listen(config.get('api.port'), () => console.log('Server On!'));
+        const port = config.get('api.port');
+        console.clear();
+        app.listen(port, () => console.log(`  Server On!`));
+        console.log(`========================================
+
+  :) API: http://localhost:${port}/api/projects
+
+  Tasks: /api/projects/projectID/tasks
+
+========================================
+
+  :) APP: http://localhost:${port}/app
+
+========================================
+`);
       });
     })
     .catch(console.log);
