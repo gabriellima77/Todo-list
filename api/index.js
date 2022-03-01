@@ -1,5 +1,5 @@
 const express = require('express');
-const tasksRouter = require('./components/tasks');
+const path = require('path');
 const projectsRouter = require('./components/projects');
 const createTables = require('./components/database/createTables');
 const acceptedTypes = require('./components/serializer').acceptedTypes;
@@ -12,6 +12,10 @@ const app = express();
 
 module.exports = () => {
   app.use(express.json());
+
+  // App Route
+  app.use('/app', express.static(path.resolve(__dirname, '../app/dist')));
+
   app.use((req, res, next) => {
     let contentType = req.header('Accept');
     if (contentType === '*/*') contentType = 'application/json';
@@ -30,6 +34,7 @@ module.exports = () => {
     next();
   });
 
+  // Api Route
   app.use('/api/projects', projectsRouter);
   app.use((error, _, res, next) => {
     const contentType = res.getHeader('Content-Type');

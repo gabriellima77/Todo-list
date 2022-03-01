@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/runtime": "^7.17.2",
     "config": "^3.3.7",
     "cors": "^2.8.5",
     "express": "^4.17.3",
@@ -19,6 +20,13 @@
     "sequelize": "^6.16.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.5",
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "babel-loader": "^8.2.3",
+    "nodemon": "^2.0.15",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
   }
 }

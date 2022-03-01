@@ -1,5 +1,5 @@
-import putAllProjects from '../src/components/projects/index.js';
-import Tasks from '../src/components/task/index.js';
+import putAllProjects from './src/components/projects/index.js';
+import Tasks from './src/components/task/index.js';
 
 const putAddTaskEvents = () => {
   const projects = document.querySelectorAll('.todo');
