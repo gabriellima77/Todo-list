@@ -36,6 +36,7 @@ npm start
 
 - [Node](https://nodejs.org/en/)
 - [Express](https://expressjs.com/)
+- [Sequelize](https://sequelize.org/)
 - [MySql](https://www.mysql.com/)
 
 ### Front:
